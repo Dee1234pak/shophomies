@@ -1,34 +1,38 @@
-#FROM ubuntu:latest
-#LABEL authors="ASUS"
-#
-#ENTRYPOINT ["top", "-b"]
+# Set the base image to use
+FROM docker.io/library/ubuntu:18.04
 
+# Set the working directory in the container
+WORKDIR /home/developer/project
 
-FROM ubuntu:18.04
-
-# Prerequisites
+# Install necessary dependencies
 RUN apt update && apt install -y curl git unzip xz-utils zip libglu1-mesa openjdk-8-jdk wget
 
-# Set up new user
+# Add a new user named 'developer'
 RUN useradd -ms /bin/bash developer
+
+# Switch to the developer user
 USER developer
-WORKDIR /home/developer
 
-# Prepare Android directories and system variables
-RUN mkdir -p Android/sdk
-ENV ANDROID_SDK_ROOT /home/developer/Android/sdk
-
-# Install Flutter SDK
+# Clone Flutter repository
 RUN git clone https://github.com/flutter/flutter.git -b stable --depth 1
-ENV PATH="/home/developer/flutter/bin:${PATH}"
 
-# Clone your Flutter project into the container
+# Set Flutter and Dart environment variables
+ENV PATH="/home/developer/flutter/bin:/home/developer/flutter/bin/cache/dart-sdk/bin:${PATH}"
+
+# Clone your project
 RUN git clone https://github.com/Dee1234pak/shophomies project
 
-# Build the Flutter project
-WORKDIR /home/developer/project
-RUN flutter pub get
-RUN flutter build apk
+# Set the ANDROID_HOME environment variable
+ENV ANDROID_HOME=C:\\Users\\ASUS\\AppData\\Local\\Android\\Sdk
 
-# Run the Flutter project
-CMD ["flutter", "run"]
+# Ensure Flutter is up to date
+RUN flutter upgrade
+
+# Run flutter doctor to check for any missing dependencies
+RUN flutter doctor
+
+# Run flutter pub get to get dependencies
+RUN flutter pub get
+
+# Build the APK
+RUN flutter build apk
