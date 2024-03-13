@@ -19,8 +19,9 @@ RUN git clone https://github.com/flutter/flutter.git -b stable --depth 1
 # Set Flutter and Dart environment variables
 ENV PATH="/home/developer/flutter/bin:/home/developer/flutter/bin/cache/dart-sdk/bin:${PATH}"
 
-# Clone your project
-RUN git clone https://github.com/Dee1234pak/shophomies project
+# Clone Flutter repository with sudo
+RUN sudo git clone https://github.com/flutter/flutter.git -b stable --depth 1
+
 
 # Set the ANDROID_HOME environment variable
 ENV ANDROID_HOME=C:\\Users\\ASUS\\AppData\\Local\\Android\\Sdk
